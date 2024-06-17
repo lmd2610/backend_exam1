@@ -6,21 +6,28 @@ import { signJwt } from '../helpers/jwt';
 import mongoose from 'mongoose';
 router.post('/api/login', async (req, res) => {
     let inputs = req.body;
-    console.log(inputs);
+    console.log(inputs)
+    if (!inputs) {
+        return res.send({
+            code: 0,
+            message: "password or username wrong!"
+        })
+    }
     let username = inputs.username as string;
     let password = inputs.password as string;
-    let userInfo: any = await UserSchema.findOne({username:username});
+    let userInfo: any = await UserSchema.findOne({ username: username });
+  
     if (userInfo == null || userInfo.password != password) {
         return res.send({
             code: 0,
             message: "password or username wrong!"
         })
     }
-    let token = signJwt({id:userInfo.id});
+    let token = signJwt({ id: userInfo.id });
     return res.send({
-        token:token,
-        code:1, 
-        message:"oke"
+        token: token,
+        code: 1,
+        message: "oke"
     })
 })
 router.post('/api/register', async (req, res) => {
@@ -45,10 +52,11 @@ router.post('/api/register', async (req, res) => {
         message: "ok"
     })
 });
-router.get('/api/hello', (req,res)=>{
+router.get('/api/hello',Middleware, (req, res) => {
+   
     return res.send({
-        code:1,
-        message:'hello'
+        code: 1,
+        message: 'hello'
     })
 })
 export { router as loginRouter }
